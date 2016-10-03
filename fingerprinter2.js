@@ -117,6 +117,8 @@
           values.push(value);
         });
         var murmur = that.x64hash128(values.join("~~~"), 31);
+        console.log(newKeys);
+        console.log(values);
         return done(murmur, newKeys);
       });
     },

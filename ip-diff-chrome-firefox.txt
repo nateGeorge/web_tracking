@@ -1,0 +1,60 @@
+firefox:
+
+{
+  "geobytesforwarderfor": "",
+  "geobytesremoteip": "128.177.113.102",
+  "geobytesipaddress": "128.177.113.102",
+  "geobytescertainty": "36",
+  "geobytesinternet": "US",
+  "geobytescountry": "United States",
+  "geobytesregionlocationcode": "USCA",
+  "geobytesregion": "California",
+  "geobytescode": "CA",
+  "geobyteslocationcode": "USCASFRA",
+  "geobytesdma": "807",
+  "geobytescity": "San Francisco",
+  "geobytescityid": "7419",
+  "geobytesfqcn": "San Francisco, CA, United States",
+  "geobyteslatitude": "37.700199",
+  "geobyteslongitude": "-122.405998",
+  "geobytescapital": "Washington, DC",
+  "geobytestimezone": "-08:00",
+  "geobytesnationalitysingular": "American",
+  "geobytespopulation": "278058881",
+  "geobytesnationalityplural": "Americans",
+  "geobytesmapreference": "North America ",
+  "geobytescurrency": "US Dollar",
+  "geobytescurrencycode": "USD",
+  "geobytestitle": "The United States"
+}
+
+
+chrome:
+
+{
+  "geobytesforwarderfor": "",
+  "geobytesremoteip": "128.177.113.102",
+  "geobytesipaddress": "128.177.113.102",
+  "geobytescertainty": "36",
+  "geobytesinternet": "US",
+  "geobytescountry": "United States",
+  "geobytesregionlocationcode": "USCA",
+  "geobytesregion": "California",
+  "geobytescode": "CA",
+  "geobyteslocationcode": "USCASFRA",
+  "geobytesdma": "807",
+  "geobytescity": "San Francisco",
+  "geobytescityid": "7419",
+  "geobytesfqcn": "San Francisco, CA, United States",
+  "geobyteslatitude": "37.700199",
+  "geobyteslongitude": "-122.405998",
+  "geobytescapital": "Washington, DC",
+  "geobytestimezone": "-08:00",
+  "geobytesnationalitysingular": "American",
+  "geobytespopulation": "278058881",
+  "geobytesnationalityplural": "Americans",
+  "geobytesmapreference": "North America ",
+  "geobytescurrency": "US Dollar",
+  "geobytescurrencycode": "USD",
+  "geobytestitle": "The United States"
+}

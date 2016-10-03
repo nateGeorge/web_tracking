@@ -6,14 +6,62 @@
   </head>
   <body>
     <h1>Got you tracked!</h1>
+    <h2>Your id is:</h2>
+    <h2 id="_id"></h2>
   </body>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-  <script src="fingerprinter2.js"></script>
+  <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+  <script type="text/javascript" src="fingerprinter2.js"></script>
+  <script type="text/javascript" src="swfobject-2.2.min.js"></script>
+  <script type="text/javascript" src="evercookie.js"></script>
+  <script type="text/javascript" src="deployJava.js"></script>
+  <script type="text/javascript" src="http://www.java.com/js/dtjava.js"></script>
   <script type="text/javascript">
+  // http://docs.oracle.com/javase/6/docs/technotes/guides/jweb/deployment_advice.html#deplToolkit
+  // http://stackoverflow.com/questions/5631506/how-to-check-whether-java-plugins-are-installed-or-not-in-a-browser-using-code
+    var cookie_id = "id3";
 
-    // Post to the provided URL with the specified parameters.
+    function checkJRE()
+    {
+      if (deployJava.getJREs().length > 0)
+      {
+          console.log("JRE Enabled");
+      } else
+      {
+          console.log("JRE not Enabled");
+      }
+    }
+
+    function setEvercookie() {
+      if (fp === undefined) {
+        setTimeout(function() {
+          setEvercookie();
+        }, 1000);
+      } else {
+        console.log('no cookie value, setting to:');
+        console.log(fp);
+        ec.set(cookie_id, fp);
+        document.getElementById("_id").innerHTML = fp;
+      }
+    }
+
+    function get_or_set_EC() {
+      try {
+        ec.get(cookie_id, function(value) {
+          if (value === undefined) {
+            setEvercookie();
+          } else {
+            console.log("Cookie value is " + value);
+            document.getElementById("_id").innerHTML = value;
+          }
+        });
+      } catch(err) {
+        console.log(err);
+      }
+    };
+
+    // Post to the path with specified parameters as a dictionary
     function post(path, parameters) {
-      var form = $('<form></form>');
+      var form = $('<form id="post_id"></form>');
 
       form.attr("method", "post");
       form.attr("action", path);
@@ -32,14 +80,30 @@
       // order for us to be able to submit it.
       $(document.body).append(form);
       form.submit();
+      $("#post_id").remove();
     }
 
-    var options = {extendedFontList: true};
-    var fp;
+
+    // first check if we have JRE; if not we should
+    // not use the related evercookie features
+    checkJRE();
+
+    var ec = new evercookie();
+    var fp; // the fingerprint from browser info
+    // retrieve evercookie if it is there, otherwise set it based
+    // on browser id
+    //get_or_set_EC();
+
+    /*var options = {extendedFontList: true};
     new Fingerprint2(options).get(function(result){
+      console.log('id from fingerprintjs2:');
       console.log(result);
       fp = result;
       post('main.html', {fingerprint: result});
-    });
+    });*/
+
+    //$.getJSON('//gd.geobytes.com/GetCityDetails?callback=?', function(data) {
+    //  console.log(JSON.stringify(data, null, 2));
+    //});
   </script>
 </html>
