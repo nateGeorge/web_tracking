@@ -20,7 +20,7 @@ var fs = require('fs')
 var path = require('path')
 var baseDirectory = __dirname   // or whatever base directory you want
 
-var port = 3000
+var port = 3001
 
 http.createServer(function (request, response) {
   console.log(request.method);

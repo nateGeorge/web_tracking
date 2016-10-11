@@ -1,0 +1,53 @@
+{
+  "name": "flash-cookies",
+  "version": "2.2.3",
+  "homepage": "https://github.com/nfriedly/Javascript-Flash-Cookies",
+  "authors": [
+    "Nathan Friedly"
+  ],
+  "description": "JavaScript library and .swf for cross-domain flash cookies. ~4kb total when minified and gzipped.",
+  "main": "dist/swfstore.min.js",
+  "moduleType": [
+    "amd",
+    "globals",
+    "node"
+  ],
+  "keywords": [
+    "swf",
+    ".swf",
+    "flash",
+    "flashcookie",
+    "flash-cookie",
+    "flash",
+    "cookie",
+    "cookies",
+    "store",
+    "storage",
+    "cross-domain",
+    "cross",
+    "domain",
+    "localStorage"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "bower_components",
+    "flex-sdk",
+    "node_modules",
+    "tests",
+    ".gitignore",
+    ".jshintrc",
+    ".travis.yml",
+    "Gruntfile.js",
+    "package.json"
+  ],
+  "_release": "2.2.3",
+  "_resolution": {
+    "type": "version",
+    "tag": "v2.2.3",
+    "commit": "c1369bc90805aa40ea7af6f99619f4ae71d8033d"
+  },
+  "_source": "https://github.com/nfriedly/Javascript-Flash-Cookies.git",
+  "_target": "^2.2.3",
+  "_originalSource": "flash-cookies",
+  "_direct": true
+}
