@@ -37,6 +37,8 @@ app.get('track.html', function (req, res) {
 
 var fp;
 app.post('/fingerprint', function (req, res) {
+  // finally got this working from here: https://gist.github.com/diorahman/1520485
+  // was a huge pain
   console.log(JSON.stringify(req.body));
   fp = req.body.fingerprint;
 });
