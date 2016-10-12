@@ -1,8 +1,0 @@
-chrome: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.116 Safari/537.36
-
-firefox: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:48.0) Gecko/20100101 Firefox/48.0
-
-
-chrome: Andale Mono;Arial;Arial Black;Bitstream Vera Sans Mono;Comic Sans MS;Courier;Courier New;Georgia;Helvetica;Impact;Times;Times New Roman;Trebuchet MS;Verdana
-
-firefox: Andale Mono;Arial;Arial Black;Arial Narrow;Bitstream Vera Sans Mono;Comic Sans MS;Courier;Courier New;Georgia;Helvetica;Impact;MS PGothic;Palatino;Times;Times New Roman;Trebuchet MS;Verdana
