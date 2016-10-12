@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>title</title>
+  </head>
+  <body>
+    <h1>Got you tracked!</h1>
+    <h2>Your id is:</h2>
+    <h2 id="_id"></h2>
+  </body>
+  <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+  <script type="text/javascript" src="fingerprinter2.js"></script>
+  <script type="text/javascript" src="swfobject-2.2.min.js"></script>
+  <script type="text/javascript" src="deployJava.js"></script>
+  <script type="text/javascript" src="lso.js"></script>
+  <script type="text/javascript" src="http://www.java.com/js/dtjava.js"></script>
+  <script src="bower_components/flash-cookies/src/swfstore.js"></script>
+  <script src="flash-cookie/src/js/flash-cookie.js"></script>
+  <script type="text/javascript">
+  // another option to try: https://github.com/marcuswestin/store.js
+
+  // http://docs.oracle.com/javase/6/docs/technotes/guides/jweb/deployment_advice.html#deplToolkit
+  // http://stackoverflow.com/questions/5631506/how-to-check-whether-java-plugins-are-installed-or-not-in-a-browser-using-code
+    var cookie_id = "id1";
+
+    function checkJRE()
+    {
+      if (deployJava.getJREs().length > 0)
+      {
+          console.log("JRE Enabled");
+      } else
+      {
+          console.log("JRE not Enabled");
+      }
+    }
+
+    // Post to the path with specified parameters as a dictionary
+    function post(path, parameters) {
+      var form = $('<form id="post_id"></form>');
+
+      form.attr("method", "post");
+      form.attr("action", path);
+
+      $.each(parameters, function(key, value) {
+          var field = $('<input></input>');
+
+          field.attr("type", "hidden");
+          field.attr("name", key);
+          field.attr("value", value);
+
+          form.append(field);
+      });
+
+      // The form needs to be a part of the document in
+      // order for us to be able to submit it.
+      $(document.body).append(form);
+      form.submit();
+      $("#post_id").remove();
+    }
+
+
+    // first check if we have JRE; if not we should
+    // not use the related evercookie features
+    checkJRE();
+
+    var fp; // the fingerprint from browser info
+    // retrieve evercookie if it is there, otherwise set it based
+    // on browser id
+    //get_or_set_EC();
+    var cook;
+    var options = {extendedFontList: true};
+    new Fingerprint2(options).get(function(result){
+      console.log('id from fingerprintjs2:');
+      console.log(result);
+      fp = result;
+      post('main.html', {fingerprint: result});
+
+
+      // https://github.com/faisalman/flash-cookie-js
+      // I discovered chrome doesn't have the same flash cookie
+      // location as other browsers, so this won't work with chrome
+      FlashCookie.onReady(function (cookie) {
+        // cookie.set("key1", "value1");
+        // cookie.set("key2", "value2");
+        //
+        // console.log(cookie.get("key1"));    // "value1"
+        //
+        // cookie.remove("key1");
+        //
+        // console.log(cookie.get("key1"));    // undefined
+        // console.log(cookie.get("key2"));    // "value2"
+
+        // cookie.clear();
+
+        // console.log(cookie.get("key2"));    // undefined
+
+        cook = cookie.get(cookie_id);
+        if (cook === undefined) {
+          console.log('setting cookie');
+          cookie.set(cookie_id, fp);
+        }
+        console.log('flash cookie:');
+        console.log(cookie.get(cookie_id));
+
+    });
+
+      // this should run on DOMReady, or at least after the opening <body> tag has been parsed.
+      // var mySwfStore = new SwfStore({
+      //   namespace: "augur_demo",
+      //   swf_url: "bower_components/flash-cookies/dist/storage.swf",
+      //   debug: true,
+      //   onready: function() {
+      //     cook = mySwfStore.get(cookie_id);
+      //     console.log(mySwfStore.getAll());
+      //     // try {
+      //     //   var cook = mySwfStore.get(cookie_id);
+      //     // } catch(err) {
+      //     //   console.log(err);
+      //     //   mySwfStore.set(cookie_id, fp);
+      //     // }
+      //     if (cook === null) {
+      //        mySwfStore.set(cookie_id, fp);
+      //     }
+      //     console.log(cookie_id + ' is set as ' + mySwfStore.get(cookie_id));
+      //   },
+      //   onerror: function(err) {
+      //     console.error(err.message);
+      //   }
+      // });
+
+    });
+
+    //$.getJSON('//gd.geobytes.com/GetCityDetails?callback=?', function(data) {
+    //  console.log(JSON.stringify(data, null, 2));
+    //});
+  </script>
+</html>
