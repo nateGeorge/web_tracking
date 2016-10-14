@@ -1,15 +1,17 @@
 # web_tracking
 
 ## Summary:
-Track computers/users with javascript and node.js.
+Track computers/devices/users with javascript and node.js.
 
-This uses [fingerprintjs2](https://github.com/Valve/fingerprintjs2).
+This uses [fingerprintjs2](https://github.com/Valve/fingerprintjs2), [js-cookie](https://github.com/js-cookie/js-cookie), and [flash-cookie-js](https://github.com/faisalman/flash-cookie-js).
+
+It can detect the same device cross-browser, except for chrome.  It does this via flash cookies, but chrome stores flash cookies in [a separate location](http://askubuntu.com/questions/40080/where-are-flash-cookies-stored).
 
 I was also trying to use [evercookie](https://github.com/samyk/evercookie), but ended up just using
-Flash LSOs (https://github.com/faisalman/flash-cookie-js).
+Flash LSOs (https://github.com/faisalman/flash-cookie-js) instead, because evercookie is a huge, complicated piece of code, and it was causing my page to drag and load infinitely.
 
 ## To install:
-There are a number of dependencies for nodejs for this.  You can see them in the first few lines of the .js file, soon to be in a config file for installation.
+There are a number of dependencies for nodejs for this.  Do `npm install` to get 'em.
 
 ## To run server:
 `node track_node_express.js`
