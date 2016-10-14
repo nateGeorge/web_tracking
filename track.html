@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>title</title>
+    <title>Tracking you...</title>
   </head>
   <body>
     <h1>Got you tracked!</h1>
@@ -12,9 +12,10 @@
   <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
   <script type="text/javascript" src="js/fingerprinter2.js"></script>
   <script type="text/javascript" src="js/flash-cookie.js"></script>
+  <script src="/js/js.cookie.js"></script> <!-- https://github.com/js-cookie/js-cookie -->
   <script type="text/javascript">
 
-    var cookie_id = "id1";
+    var cookie_id = "fingerpr01";
 
     // Post to the path with specified parameters as a dictionary
     function post(path, parameters) {
@@ -42,11 +43,16 @@
 
     var fp; // the fingerprint from browser info
     var cook; // flash cookie
+    var jscook; // cookie thru js
     var options = {extendedFontList: true};
     new Fingerprint2(options).get(function(result){
       console.log('id from fingerprintjs2:');
       console.log(result);
       fp = result;
+      jscook = Cookies.get(cookie_id);
+      if (jscook === undefined) {
+        Cookies.set(cookie_id, fp, { exires: 1000000000, path: '/' });
+      }
       var data = {};
       data.fingerprint = result;
       $.ajax({
@@ -55,15 +61,12 @@
               data: JSON.stringify(data),
               contentType: 'application/json',
               success: function(data) {
-                  //show content
-                  console.log('Success!')
+                  console.log('post success!')
               },
               error: function(jqXHR, textStatus, err) {
-                  //show error message
-                console.log('error');
+                  console.log('post error');
               }
             });
-      //post('track.html', {Query: {'fingerprint': result}});
 
       // https://github.com/faisalman/flash-cookie-js
       // I discovered chrome doesn't have the same flash cookie
@@ -79,6 +82,7 @@
       });
     });
 
+    // optional: get IP address
     //$.getJSON('//gd.geobytes.com/GetCityDetails?callback=?', function(data) {
     //  console.log(JSON.stringify(data, null, 2));
     //});
