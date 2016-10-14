@@ -8,7 +8,7 @@
 ;(function (window) {
     'use strict';
     var movieName = 'FlashCookie';
-    var movieURL = 'swf/FlashCookie.swf';
+    var movieURL = '/swf/FlashCookie.swf';
     var ready = new CustomEvent('ready', {});
     var object = document.createElement('object');
     var param1 = document.createElement('param');

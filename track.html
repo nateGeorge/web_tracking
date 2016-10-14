@@ -6,79 +6,78 @@
   </head>
   <body>
     <h1>Got you tracked!</h1>
-    <h2>Your id is:</h2>
+    <h2>Your fingerprint is:</h2>
     <h2 id="_id"></h2>
   </body>
   <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
   <script type="text/javascript" src="js/fingerprinter2.js"></script>
-  <script type="text/javascript" src="js/flash-cookie.js"></script>
+  <script type="text/javascript" src="js/swfstore.js"></script>
   <script src="/js/js.cookie.js"></script> <!-- https://github.com/js-cookie/js-cookie -->
   <script type="text/javascript">
 
     var cookie_id = "fingerpr01";
 
-    // Post to the path with specified parameters as a dictionary
-    function post(path, parameters) {
-      var form = $('<form id="post_id"></form>');
+    // Post to the path (loc) with specified data as a dictionary
+    var sent_flash = false,
+        sent_cook = false,
+        sent_id = false; // for checking if cookie, flash, and id have been sent to server
 
-      form.attr("method", "post");
-      form.attr("action", path);
-
-      $.each(parameters, function(key, value) {
-          var field = $('<input></input>');
-
-          field.attr("type", "hidden");
-          field.attr("name", key);
-          field.attr("value", value);
-
-          form.append(field);
-      });
-
-      // The form needs to be a part of the document in
-      // order for us to be able to submit it.
-      $(document.body).append(form);
-      form.submit();
-      $("#post_id").remove();
+    function post(data, loc, check) {
+        if (check == false) {
+          $.ajax({
+                  url: 'http://' + window.location.host + loc,
+                  type: 'POST',
+                  data: JSON.stringify(data),
+                  contentType: 'application/json',
+                  success: function(data) {
+                      console.log('post success!')
+                      check = true;
+                  },
+                  error: function(jqXHR, textStatus, err) {
+                      console.log('post error');
+                  }
+            });
+        }
     }
 
     var fp; // the fingerprint from browser info
-    var cook; // flash cookie
+    var flash_cook; // flash cookie
     var jscook; // cookie thru js
     var options = {extendedFontList: true};
     new Fingerprint2(options).get(function(result){
       console.log('id from fingerprintjs2:');
       console.log(result);
       fp = result;
+      $("#_id").text(fp);
       jscook = Cookies.get(cookie_id);
       if (jscook === undefined) {
         Cookies.set(cookie_id, fp, { exires: 1000000000, path: '/' });
       }
       var data = {};
       data.fingerprint = result;
-      $.ajax({
-              url: 'http://localhost:3001/fingerprint',
-              type: 'POST',
-              data: JSON.stringify(data),
-              contentType: 'application/json',
-              success: function(data) {
-                  console.log('post success!')
-              },
-              error: function(jqXHR, textStatus, err) {
-                  console.log('post error');
-              }
-            });
+      post(data, '/fingerprint', sent_id);
 
-      // https://github.com/faisalman/flash-cookie-js
+      //
       // I discovered chrome doesn't have the same flash cookie
       // location as other browsers, so this won't work with chrome
-      FlashCookie.onReady(function (cookie) {
-        cook = cookie.get(cookie_id);
-        if (cook === undefined) {
-          console.log('setting cookie');
-          cookie.set(cookie_id, fp);
+      // for correlating multiple browsers on the same device
+      var mySwfStore = new SwfStore({
+        namespace: "tracker_nexp",
+        swf_url: "//" + window.location.host + "/swf/storage.swf",
+        onready: function() {
+          flash_cook = mySwfStore.get(cookie_id);
+          if (flash_cook === null) {
+            mySwfStore.set(cookie_id, fp);
+          }
+          flash_cook = mySwfStore.get(cookie_id);
+          console.log('flash cookie is ' + flash_cook);
+          var data = {};
+          data.flash_cookie = flash_cook;
+          post(data, '/flash_cookie', sent_flash);
+        },
+        onerror: function(err) {
+          console.error(err.message);
         }
-        console.log('flash cookie:');
-        console.log(cookie.get(cookie_id));
       });
     });
 

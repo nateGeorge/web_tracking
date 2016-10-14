@@ -3,7 +3,7 @@
 ## Summary:
 Track computers/devices/users with javascript and node.js.
 
-This uses [fingerprintjs2](https://github.com/Valve/fingerprintjs2), [js-cookie](https://github.com/js-cookie/js-cookie), and [flash-cookie-js](https://github.com/faisalman/flash-cookie-js).
+This uses [fingerprintjs2](https://github.com/Valve/fingerprintjs2), [js-cookie](https://github.com/js-cookie/js-cookie), and [SwfStore](https://github.com/nfriedly/Javascript-Flash-Cookies) for flash cookies.
 
 It can detect the same device cross-browser, except for chrome.  It does this via flash cookies, but chrome stores flash cookies in [a separate location](http://askubuntu.com/questions/40080/where-are-flash-cookies-stored).
 

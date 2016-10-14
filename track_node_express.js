@@ -13,7 +13,17 @@ var express = require('express'),
     fs = require('fs'),
     path = require('path'),
     qs = require('querystring'),
-    bodyParser = require('body-parser');
+    bodyParser = require('body-parser'),
+    MongoClient = require('mongodb').MongoClient
+    assert = require('assert');
+
+var url = 'mongodb://localhost:27017/tracked';
+
+MongoClient.connect(url, function(err, db) {
+  assert.equal(null, err);
+  console.log("Connected correctly to server");
+  var collection = db.collection('devices');
+});
 
 var port = 3001;
 var app = express();
@@ -23,7 +33,8 @@ app.use("/track.html", express.static(__dirname + '/track.html'));
 app.use("/js/fingerprinter2.js", express.static(__dirname + '/js/fingerprinter2.js'));
 app.use("/js/flash-cookie.js", express.static(__dirname + '/js/flash-cookie.js'));
 app.use("/js/js.cookie.js", express.static(__dirname + '/js/js.cookie.js'));
-app.use("/swf/FlashCookie.swf", express.static(__dirname + '/swf/FlashCookie.swf'));
+app.use("/js/swfstore.js", express.static(__dirname + '/js/swfstore.js'));
+app.use("/swf/storage.swf", express.static(__dirname + '/swf/storage.swf'));
 
 app.listen(port, function () {
   console.log("listening on port " + port);
@@ -42,6 +53,13 @@ app.post('/fingerprint', function (req, res) {
   // was a huge pain
   console.log(JSON.stringify(req.body));
   fp = req.body.fingerprint;
+});
+
+app.post('/flash_cookie', function (req, res) {
+  // finally got this working from here: https://gist.github.com/diorahman/1520485
+  // was a huge pain
+  console.log(JSON.stringify(req.body));
+  fc = req.body.flash_cookie;
 });
 
 // http://stackoverflow.com/questions/4295782/how-do-you-extract-post-data-in-node-js
