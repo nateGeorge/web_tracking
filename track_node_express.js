@@ -22,6 +22,7 @@ app.use( bodyParser.json() );  //  for post requests
 app.use("/track.html", express.static(__dirname + '/track.html'));
 app.use("/js/fingerprinter2.js", express.static(__dirname + '/js/fingerprinter2.js'));
 app.use("/js/flash-cookie.js", express.static(__dirname + '/js/flash-cookie.js'));
+app.use("/js/js.cookie.js", express.static(__dirname + '/js/js.cookie.js'));
 app.use("/swf/FlashCookie.swf", express.static(__dirname + '/swf/FlashCookie.swf'));
 
 app.listen(port, function () {
