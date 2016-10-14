@@ -1,0 +1,29 @@
+{
+  "name": "track-devices",
+  "version": "0.1.0",
+  "description": "Assigns unique IDs to devices (for tracking) based on their characteristics.",
+  "main": "track_node_express.js",
+  "scripts": {
+    "start": "node track_node_express.js"
+  },
+  "dependencies": {
+    "mongodb": "^2.2.10",
+    "express": "^4.14.0",
+    "body-parser": "^1.15.2",
+    "querystring": "^0.2.0"
+  },
+  "engines": {
+    "node": "4.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nateGeorge/web_tracking"
+  },
+  "keywords": [
+    "node",
+    "tracking",
+    "cookies"
+  ],
+  "author": "Nate George",
+  "license": "MIT"
+}
