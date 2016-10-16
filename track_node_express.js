@@ -18,11 +18,14 @@ var express = require('express'),
     assert = require('assert');
 
 var url = 'mongodb://localhost:27017/tracked';
+var db,
+    collection;
 
-MongoClient.connect(url, function(err, db) {
+MongoClient.connect(url, function(err, mongo_db) {
   assert.equal(null, err);
+  db = mongo_db;
+  collection = db.collection('devices');
   console.log("Connected correctly to server");
-  var collection = db.collection('devices');
 });
 
 var port = 3001;
@@ -47,7 +50,10 @@ app.get('/', function (req, res) {
 app.get('track.html', function (req, res) {
 });
 
-var fp;
+var fp,
+    fc,
+    cook;
+
 app.post('/fingerprint', function (req, res) {
   // finally got this working from here: https://gist.github.com/diorahman/1520485
   // was a huge pain
@@ -55,12 +61,81 @@ app.post('/fingerprint', function (req, res) {
   fp = req.body.fingerprint;
 });
 
+app.post('/reg_cookie', function (req, res) {
+  // finally got this working from here: https://gist.github.com/diorahman/1520485
+  // was a huge pain
+  console.log(JSON.stringify(req.body));
+  cook = req.body.flash_cookie;
+});
+
+// this is the last cookie to come through
 app.post('/flash_cookie', function (req, res) {
   // finally got this working from here: https://gist.github.com/diorahman/1520485
   // was a huge pain
   console.log(JSON.stringify(req.body));
   fc = req.body.flash_cookie;
+  findDevice(db, sendID, fp, cook, fc);
 });
+
+var findDevice = function(db, callback, fp, cook, fc) {
+  // Find some documents
+  collection.find({uid: fp}).toArray(function(err, docs) {
+    assert.equal(err, null);
+    console.log("Found the following records");
+    console.dir(docs);
+    if (docs.length == 0) {
+      console.log('no docs');
+      collection.find({alt_id: cook}).toArray(function(err, docs) {
+        if (docs.length == 0) {
+          console.log('still no docs');
+          collection.find({alt_id: fc}).toArray(function(err, docs) {
+            if (docs.length == 0) {
+              console.log('STILL no docs');
+              console.log(fc);
+              console.log(cook);
+              insertNewEntry(fp);
+            }
+          });
+        } else {
+          updateEntry(docs[0]['uid']);
+        }
+      });
+    } else {
+      console.log(docs[0]['uid']);
+      updateEntry(fp, docs[0]['alt_ids']);
+    }
+    callback(docs);
+  });
+}
+
+var alt_ids;
+var makeAltIds = function() {
+  alt_ids = [];
+  if (fc != undefined & fc != fp) {
+    alt_ids.push(fc);
+  }
+  if (cook != undefined & fc != fp) {
+    alt_ids.push(cook);
+  }
+  console.log(alt_ids);
+}
+
+var insertNewEntry = function(id) {
+  makeAltIds();
+  collection.insertOne({uid : id, alt_ids: alt_ids}, function(err, result) {
+   assert.equal(err, null);
+   console.log("Inserted new device entry");
+   //callback(result);
+ });
+}
+
+var updateEntry = function(id, exist_alt_ids) {
+  makeAltIds();
+}
+
+var sendID = function(id) {
+
+}
 
 // http://stackoverflow.com/questions/4295782/how-do-you-extract-post-data-in-node-js
 function processPost(request, response) {
