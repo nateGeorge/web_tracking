@@ -6,8 +6,10 @@
   </head>
   <body>
     <h1>Got you tracked!</h1>
-    <h2>Your fingerprint is:</h2>
+    <h2>Your browser/device fingerprint is:</h2>
     <h2 id="_id"></h2>
+    <h2>Your unique ID is:</h2>
+    <h2 id="uid"></h2>
   </body>
   <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
   <script type="text/javascript" src="js/fingerprinter2.js"></script>
@@ -50,9 +52,9 @@
       fp = result;
       $("#_id").text(fp);
       jscook = Cookies.get(cookie_id);
-      if (jscook === undefined) {
-        Cookies.set(cookie_id, fp, { exires: 1000000000, path: '/' });
-      }
+      var data = {};
+      data.js_cookie = jscook;
+      post(data, '/reg_cookie', sent_cook);
       var data = {};
       data.fingerprint = result;
       post(data, '/fingerprint', sent_id);
@@ -80,6 +82,10 @@
         }
       });
     });
+
+    if (jscook === undefined) {
+      Cookies.set(cookie_id, fp, { exires: 1000000000, path: '/' });
+    }
 
     // optional: get IP address
     //$.getJSON('//gd.geobytes.com/GetCityDetails?callback=?', function(data) {
