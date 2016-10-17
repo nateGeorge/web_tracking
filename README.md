@@ -1,5 +1,10 @@
 # web_tracking
 
+## Quick start
+`npm install`
+`node track_node_express.js`
+Navigate to [localhost:3001](localhost:3001)
+
 ## Summary
 Track computers/devices/users with javascript and node.js.
 
