@@ -65,6 +65,7 @@
     this.nativeForEach = Array.prototype.forEach;
     this.nativeMap = Array.prototype.map;
   };
+  var dataDict = {};
   Fingerprint2.prototype = {
     extend: function(source, target) {
       if (source == null) { return target; }
@@ -117,8 +118,8 @@
           values.push(value);
         });
         var murmur = that.x64hash128(values.join("~~~"), 31);
-        console.log(newKeys);
-        console.log(values);
+        //console.log(newKeys);
+        //console.log(values);
         return done(murmur, newKeys);
       });
     },
@@ -140,15 +141,20 @@
       return keys;
     },
     colorDepthKey: function(keys) {
+      var cdepth = screen.colorDepth;
       if(!this.options.excludeColorDepth) {
-        keys.push({key: "color_depth", value: screen.colorDepth});
+        keys.push({key: "color_depth", value: cdepth});
+        dataDict.cdepth = cdepth;
       }
+      console.log(screen.colorDepth);
       return keys;
     },
     pixelRatioKey: function(keys) {
+      var pixel_ratio = this.getPixelRatio();
       if(!this.options.excludePixelRatio) {
-        keys.push({key: "pixel_ratio", value: this.getPixelRatio()});
+        keys.push({key: "pixel_ratio", value: pixel_ratio});
       }
+
       return keys;
     },
     getPixelRatio: function() {
@@ -170,6 +176,8 @@
       if(typeof resolution !== "undefined") { // headless browsers
         keys.push({key: "resolution", value: resolution});
       }
+      console.log(resolution);
+      dataDict.scrn_res = resolution;
       return keys;
     },
     availableScreenResolutionKey: function(keys) {
@@ -190,12 +198,16 @@
       if(typeof available !== "undefined") { // headless browsers
         keys.push({key: "available_resolution", value: available});
       }
+      console.log(available);
+      dataDict.avail_scrn_res = available;
       return keys;
     },
     timezoneOffsetKey: function(keys) {
       if(!this.options.excludeTimezoneOffset) {
         keys.push({key: "timezone_offset", value: new Date().getTimezoneOffset()});
       }
+      var tz = new Date().getTimezoneOffset();
+      dataDict.tz = tz;
       return keys;
     },
     sessionStorageKey: function(keys) {
@@ -509,7 +521,10 @@
         h.removeChild(fontsDiv);
         h.removeChild(baseFontsDiv);
 
+        console.log(available);
+
         keys.push({key: "js_fonts", value: available});
+        dataDict.fonts = available;
         done(keys);
       }, 1);
     },
@@ -1285,7 +1300,7 @@
       h2 = this.x64Fmix(h2);
       h1 = this.x64Add(h1, h2);
       h2 = this.x64Add(h2, h1);
-      return ("00000000" + (h1[0] >>> 0).toString(16)).slice(-8) + ("00000000" + (h1[1] >>> 0).toString(16)).slice(-8) + ("00000000" + (h2[0] >>> 0).toString(16)).slice(-8) + ("00000000" + (h2[1] >>> 0).toString(16)).slice(-8);
+      return [("00000000" + (h1[0] >>> 0).toString(16)).slice(-8) + ("00000000" + (h1[1] >>> 0).toString(16)).slice(-8) + ("00000000" + (h2[0] >>> 0).toString(16)).slice(-8) + ("00000000" + (h2[1] >>> 0).toString(16)).slice(-8), dataDict];
     }
   };
   Fingerprint2.VERSION = "1.4.1";

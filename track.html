@@ -17,12 +17,14 @@
   <script src="/js/js.cookie.js"></script> <!-- https://github.com/js-cookie/js-cookie -->
   <script type="text/javascript">
 
-    var cookie_id = "fingerpr01";
+    var cookie_id = "fingerpr08";
 
     // Post to the path (loc) with specified data as a dictionary
     var sent_flash = false,
         sent_cook = false,
-        sent_id = false; // for checking if cookie, flash, and id have been sent to server
+        sent_id = false,
+        sent_ip = false,
+        sent_dd = false; // for checking if cookie, flash, and id have been sent to server
 
     function post(data, loc, check) {
         if (check == false) {
@@ -42,54 +44,66 @@
         }
     }
 
+
     var fp; // the fingerprint from browser info
     var flash_cook; // flash cookie
     var jscook; // cookie thru js
     var options = {extendedFontList: true};
+    var mySwfStore;
     new Fingerprint2(options).get(function(result){
+      fp = result[0];
+      dataDict = result[1];
       console.log('id from fingerprintjs2:');
-      console.log(result);
-      fp = result;
+      console.log(fp);
+      console.log(dataDict);
       $("#_id").text(fp);
       jscook = Cookies.get(cookie_id);
       var data = {};
       data.js_cookie = jscook;
       post(data, '/reg_cookie', sent_cook);
       var data = {};
-      data.fingerprint = result;
+      data.fingerprint = fp;
       post(data, '/fingerprint', sent_id);
+      post(dataDict, '/datadict', sent_dd);
 
       //
       // I discovered chrome doesn't have the same flash cookie
       // location as other browsers, so this won't work with chrome
       // for correlating multiple browsers on the same device
-      var mySwfStore = new SwfStore({
+      mySwfStore = new SwfStore({
         namespace: "tracker_nexp",
         swf_url: "//" + window.location.host + "/swf/storage.swf",
         onready: function() {
           flash_cook = mySwfStore.get(cookie_id);
           if (flash_cook === null) {
-            mySwfStore.set(cookie_id, fp);
+            flash_cook = undefined;
           }
-          flash_cook = mySwfStore.get(cookie_id);
-          console.log('flash cookie is ' + flash_cook);
           var data = {};
           data.flash_cookie = flash_cook;
           post(data, '/flash_cookie', sent_flash);
+          // get IP address
+          $.getJSON('//gd.geobytes.com/GetCityDetails?callback=?', function(data) {
+            // jsondata = JSON.stringify(data, null, 2)
+            // console.log(jsondata);
+            console.log(data["geobytesipaddress"]);
+            post({ip: data["geobytesipaddress"]}, '/ip', sent_ip);
+
+            $.get( "/id", function( data ) {
+              console.log(data);
+              if (jscook === undefined) {
+                Cookies.set(cookie_id, data.id, { exires: 1000000000, path: '/' });
+              }
+              if (flash_cook === undefined) {
+                mySwfStore.set(cookie_id, data.id);
+              }
+              $("#uid").text(data.id);
+            });
+          });
         },
         onerror: function(err) {
           console.error(err.message);
         }
       });
     });
-
-    if (jscook === undefined) {
-      Cookies.set(cookie_id, fp, { exires: 1000000000, path: '/' });
-    }
-
-    // optional: get IP address
-    //$.getJSON('//gd.geobytes.com/GetCityDetails?callback=?', function(data) {
-    //  console.log(JSON.stringify(data, null, 2));
-    //});
   </script>
 </html>
