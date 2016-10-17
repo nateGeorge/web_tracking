@@ -58,30 +58,23 @@ var fp,
     datadict;
 
 app.post('/fingerprint', function (req, res) {
-  // finally got this working from here: https://gist.github.com/diorahman/1520485
-  // was a huge pain
+  // got this working from here: https://gist.github.com/diorahman/1520485
   console.log(JSON.stringify(req.body));
   fp = req.body.fingerprint;
 });
 
 app.post('/reg_cookie', function (req, res) {
-  // finally got this working from here: https://gist.github.com/diorahman/1520485
-  // was a huge pain
   console.log(JSON.stringify(req.body));
   cook = req.body.flash_cookie;
 });
 
 app.post('/ip', function (req, res) {
-  // finally got this working from here: https://gist.github.com/diorahman/1520485
-  // was a huge pain
   console.log(JSON.stringify(req.body));
   ip = req.body.ip;
   datadict.ip = ip;
 });
 
 app.post('/datadict', function (req, res) {
-  // finally got this working from here: https://gist.github.com/diorahman/1520485
-  // was a huge pain
   //console.log(JSON.stringify(req.body));
   datadict = req.body;
   //console.log(datadict);
@@ -89,8 +82,6 @@ app.post('/datadict', function (req, res) {
 
 // this is the last cookie to come through usually
 app.post('/flash_cookie', function (req, res) {
-  // finally got this working from here: https://gist.github.com/diorahman/1520485
-  // was a huge pain
   console.log(JSON.stringify(req.body));
   fc = req.body.flash_cookie;
 });
@@ -129,7 +120,7 @@ var checkRest = function(res) {
       } else {
         console.log('found docs:');
         console.log(docs);
-        updateEntry(docs[0]['uid'], _.difference(docs[0]['alt_ids'], cook), res);
+        updateEntry(docs[0]['uid'], docs[0]['alt_ids'], res);
       }
     });
   } else if (fc != undefined) {
@@ -146,7 +137,7 @@ var checkDataDict = function(res) {
       checkRest(res);
     } else {
       console.log('found datadict');
-      updateEntry(docs[0]['uid'], _.difference(docs[0]['alt_ids'], fp), res);
+      updateEntry(docs[0]['uid'], docs[0]['alt_ids'], res);
     }
   });
 }
@@ -157,7 +148,7 @@ var findAltCookFC = function(res) { // finds flash cookie in alternate ids
       console.log('STILL no docs');
       insertNewEntry(fp, res);
     } else {
-      updateEntry(docs[0]['uid'], _.difference(docs[0]['alt_ids'], fc), res);
+      updateEntry(docs[0]['uid'], docs[0]['alt_ids'], res);
     }
   });
 }
@@ -171,7 +162,6 @@ var makeAltIds = function() {
   if (cook != undefined & fc != fp) {
     alt_ids.push(cook);
   }
-  console.log(alt_ids);
 }
 
 var insertNewEntry = function(id, res) {
@@ -186,8 +176,11 @@ var insertNewEntry = function(id, res) {
 var updateEntry = function(id, exist_alt_ids, res) {
   console.log('updating entry');
   makeAltIds();
-  if (_.intersection(alt_ids, exist_alt_ids) != exist_alt_ids) {
-    collection.updateOne({uid: id, alt_ids: _.difference(alt_ids, exist_alt_ids).concat(exist_alt_ids)})
+  alt_ids.push(fp);
+  alt_ids = new Set(_.difference(alt_ids, [id]));
+  alt_ids = Array.from(alt_ids);
+  if (_.intersection(alt_ids, exist_alt_ids).length == 0) {
+    collection.updateOne({uid: id}, {uid: id, alt_ids: alt_ids.concat(exist_alt_ids), datadict: datadict})
   }
   sendID(id, res);
 }
