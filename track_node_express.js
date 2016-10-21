@@ -181,9 +181,12 @@ var updateEntry = function(id, exist_alt_ids, res) {
   alt_ids = Array.from(alt_ids);
   if (_.intersection(alt_ids, exist_alt_ids).length == 0) {
     // unfortunately this wasn't working on the server
-    // collection.updateOne({uid: id}, {uid: id, alt_ids: alt_ids.concat(exist_alt_ids), datadict: datadict})
-    collection.removeOne({uid: id})
-    collection.insertOne({uid: id, alt_ids: alt_ids.concat(exist_alt_ids), datadict: datadict});
+    collection.updateOne({uid: id}, {uid: id, alt_ids: alt_ids.concat(exist_alt_ids), datadict: datadict}, function(err, result) {
+     assert.equal(err, null);
+     console.log("Inserted new device entry");
+    });
+    //collection.removeOne({uid: id})
+    //collection.insertOne({uid: id, alt_ids: alt_ids.concat(exist_alt_ids), datadict: datadict});
   }
   sendID(id, res);
 }
