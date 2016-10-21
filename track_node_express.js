@@ -18,7 +18,7 @@ var express = require('express'),
     assert = require('assert'),
     _ = require('underscore');
 
-var url = 'mongodb://localhost:27017/tracked';
+var url = 'mongodb://127.0.0.1:27017/tracked';
 var db,
     collection;
 
@@ -180,12 +180,16 @@ var updateEntry = function(id, exist_alt_ids, res) {
   alt_ids = new Set(_.difference(alt_ids, [id]));
   alt_ids = Array.from(alt_ids);
   if (_.intersection(alt_ids, exist_alt_ids).length == 0) {
-    collection.updateOne({uid: id}, {uid: id, alt_ids: alt_ids.concat(exist_alt_ids), datadict: datadict})
+    // unfortunately this wasn't working on the server
+    // collection.updateOne({uid: id}, {uid: id, alt_ids: alt_ids.concat(exist_alt_ids), datadict: datadict})
+    collection.removeOne({uid: id})
+    collection.insertOne({uid: id, alt_ids: alt_ids.concat(exist_alt_ids), datadict: datadict});
   }
   sendID(id, res);
 }
 
 var sendID = function(id, res) {
+  console.log('sending id to browser...');
   res.send({id: id});
 }
 

@@ -73,6 +73,23 @@
       mySwfStore = new SwfStore({
         namespace: "tracker_nexp",
         swf_url: "//" + window.location.host + "/swf/storage.swf",
+        onerror: function(err) {
+          console.error(err.message);
+          $.getJSON('//gd.geobytes.com/GetCityDetails?callback=?', function(data) {
+            // jsondata = JSON.stringify(data, null, 2)
+            // console.log(jsondata);
+            console.log(data["geobytesipaddress"]);
+            post({ip: data["geobytesipaddress"]}, '/ip', sent_ip);
+
+            $.get( "/id", function( data ) {
+              console.log(data);
+              if (jscook === undefined) {
+                Cookies.set(cookie_id, data.id, { exires: 1000000000, path: '/' });
+              }
+              $("#uid").text(data.id);
+            });
+          });
+        },
         onready: function() {
           flash_cook = mySwfStore.get(cookie_id);
           if (flash_cook === null) {
@@ -99,9 +116,6 @@
               $("#uid").text(data.id);
             });
           });
-        },
-        onerror: function(err) {
-          console.error(err.message);
         }
       });
     });
