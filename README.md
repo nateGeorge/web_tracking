@@ -41,3 +41,37 @@ This works by first checking from the browser javascript if they have cookies (f
 ## To do:
 * need to update ip when it changes
 * I found the installed fonts were a bit different on my FF than opera or chrome.  Need to deal with that (3 extra installed fonts on FF compared with others)
+
+## Running on the server:
+Install the dependencies (also can be done by ./install_these.sh):
+
+nodejs from the default package manager is super old!  It will throw a `ReferenceError: Set is not defined` !
+Instead, install from their [instructions](https://nodejs.org/en/download/package-manager/#debian-and-ubuntu-based-linux-distributions):
+```bash
+curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
+sudo apt-get install -y nodejs
+```
+
+Installing mongodb from the ubuntu repos seemed to work for me:
+```bash
+sudo apt-get install mongodb
+```
+
+I actually used some instructions from  [digitalocean](https://www.digitalocean.com/community/tutorials/how-to-install-mongodb-on-ubuntu-14-04).
+
+Also, install npm:
+```bash
+sudo apt-get install npm
+```
+
+Finally, install node_packages:
+```bash
+npm install
+```
+
+and then you can start the server:
+```bash
+npm start
+```
+
+Get your ip from the AWS dashboard (make sure to add an incoming rule in 'Security Groups' to allow incoming connections to port 3001 from anywhere), and visit [your_ip]:3001
