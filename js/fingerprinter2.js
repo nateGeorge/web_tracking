@@ -108,8 +108,8 @@
       keys = this.hasLiedBrowserKey(keys);
       keys = this.touchSupportKey(keys);
       var that = this;
+      var values = [];
       this.fontsKey(keys, function(newKeys){
-        var values = [];
         that.each(newKeys, function(pair) {
           var value = pair.value;
           if (typeof pair.value.join !== "undefined") {
@@ -118,8 +118,9 @@
           values.push(value);
         });
         var murmur = that.x64hash128(values.join("~~~"), 31);
-        //console.log(newKeys);
-        //console.log(values);
+        console.log('in fp2');
+        console.log(newKeys);
+        console.log(values);
         return done(murmur, newKeys);
       });
     },

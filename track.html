@@ -50,9 +50,14 @@
     var jscook; // cookie thru js
     var options = {extendedFontList: true};
     var mySwfStore;
-    new Fingerprint2(options).get(function(result){
-      fp = result[0];
-      dataDict = result[1];
+    var otherkeys;
+    var res;
+    new Fingerprint2(options).get(function(the_fp, all_keys){
+      // result is length 2
+      //res = result;
+      fp = the_fp;
+      dataDict = all_keys;
+      //otherkeys = result[2];
       console.log('id from fingerprintjs2:');
       console.log(fp);
       console.log(dataDict);
